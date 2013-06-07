@@ -96,7 +96,7 @@ public class SecurityGroupRule {
 
    /**
     * 
-    * @return The set of instance group IDs for this rule.
+    * @return The set of @{link SecurityGroup} ids for this rule.
     */
    public Set<String> getGroupIds() {
       return groupIds;
