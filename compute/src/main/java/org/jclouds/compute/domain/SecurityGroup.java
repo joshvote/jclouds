@@ -16,12 +16,25 @@
  */
 package org.jclouds.compute.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
-public enum ComputeType {
+import java.util.Set;
 
-   NODE, IMAGE, HARDWARE, SECURITYGROUP;
+import org.jclouds.compute.domain.internal.SecurityGroupImpl;
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.inject.ImplementedBy;
+
+/**
+ * Describes a security group containing a set of @{link SecurityGroupRule}s
+ * 
+ * @author Andrew Bayer
+ */
+@ImplementedBy(SecurityGroupImpl.class)
+public interface SecurityGroup extends ComputeMetadata {
+
+   /**
+    * 
+    * @return The set of @{link SecurityGroupRule}s for this security group
+    */
+   Set<SecurityGroupRule> getRules();
 
 }

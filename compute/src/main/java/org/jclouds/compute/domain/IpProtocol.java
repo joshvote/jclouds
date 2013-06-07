@@ -16,12 +16,24 @@
  */
 package org.jclouds.compute.domain;
 
-/**
- * 
- * @author Adrian Cole
- */
-public enum ComputeType {
+import static com.google.common.base.Preconditions.checkNotNull;
 
-   NODE, IMAGE, HARDWARE, SECURITYGROUP;
+public enum IpProtocol {
+   TCP, UDP, ICMP, UNRECOGNIZED;
+   public String value() {
+      return name().toLowerCase();
+   }
 
+   @Override
+   public String toString() {
+      return value();
+   }
+
+   public static IpProtocol fromValue(String protocol) {
+      try {
+         return valueOf(checkNotNull(protocol, "protocol").toUpperCase());
+      } catch (IllegalArgumentException e) {
+         return UNRECOGNIZED;
+      }
+   }
 }
