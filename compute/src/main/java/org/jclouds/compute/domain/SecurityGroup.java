@@ -25,6 +25,7 @@ import java.util.Set;
 import org.jclouds.compute.domain.ComputeType;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupRule;
+import org.jclouds.compute.domain.internal.ComputeMetadataImpl;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.ResourceMetadata;
 import org.jclouds.javax.annotation.Nullable;
@@ -43,9 +44,9 @@ public class SecurityGroup extends ComputeMetadataImpl {
 
    private final Set<SecurityGroupRule> rules;
 
-   public SecurityGroupImpl(String providerId, String name, String id, @Nullable Location location, URI uri,
-                            Map<String, String> userMetadata, Set<String> tags,
-                            Iterable<SecurityGroupRule> rules) { 
+   public SecurityGroup(String providerId, String name, String id, @Nullable Location location, URI uri,
+                        Map<String, String> userMetadata, Set<String> tags,
+                        Iterable<SecurityGroupRule> rules) { 
       super(ComputeType.SECURITYGROUP, providerId, name, id, location, uri, userMetadata, tags);
       this.rules = ImmutableSet.copyOf(checkNotNull(rules, "rules"));
    }
