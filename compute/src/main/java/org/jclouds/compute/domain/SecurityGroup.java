@@ -16,25 +16,55 @@
  */
 package org.jclouds.compute.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 
-import org.jclouds.compute.domain.internal.SecurityGroupImpl;
+import org.jclouds.compute.domain.ComputeType;
+import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.compute.domain.SecurityGroupRule;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.ResourceMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.inject.ImplementedBy;
+import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Describes a security group containing a set of @{link SecurityGroupRule}s
  * 
  * @author Andrew Bayer
  */
-@ImplementedBy(SecurityGroupImpl.class)
-public interface SecurityGroup extends ComputeMetadata {
+public class SecurityGroup extends ComputeMetadataImpl {
+
+   private final Set<SecurityGroupRule> rules;
+
+   public SecurityGroupImpl(String providerId, String name, String id, @Nullable Location location, URI uri,
+                            Map<String, String> userMetadata, Set<String> tags,
+                            Iterable<SecurityGroupRule> rules) { 
+      super(ComputeType.SECURITYGROUP, providerId, name, id, location, uri, userMetadata, tags);
+      this.rules = ImmutableSet.copyOf(checkNotNull(rules, "rules"));
+   }
 
    /**
     * 
     * @return The set of @{link SecurityGroupRule}s for this security group
     */
-   Set<SecurityGroupRule> getRules();
+   public Set<SecurityGroupRule> getRules() {
+      return rules;
+   }
+
+
+   @Override
+   protected ToStringHelper string() {
+      ToStringHelper helper = computeToStringPrefix();
+      if (rules.size() > 0)
+         helper.add("rules", rules);
+      return addComputeToStringSuffix(helper);
+   }
 
 }
