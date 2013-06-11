@@ -21,6 +21,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
+import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
@@ -44,6 +45,14 @@ public interface SecurityGroupExtension {
    SecurityGroup createSecurityGroup(String name, Location location);
 
    /**
+    * Remove an existing @{link SecurityGroup}, and its permissions.
+    *
+    * @param id
+    *           The id of the SecurityGroup to delete.
+    */
+   void removeSecurityGroup(String id);
+
+   /**
     * Add a @{link IpPermission} to an existing @{link SecurityGroup}. Applies the permission to the
     *   security group on the provider.
     *
@@ -57,6 +66,19 @@ public interface SecurityGroupExtension {
    SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group);
 
    /**
+    * Remove a @{link IpPermission} from an existing @{link SecurityGroup}. Removes the permission from the
+    *   security group on the provider.
+    *
+    * @param rule
+    *           The IpPermission to remove.
+    * @param group
+    *           The SecurityGroup to remove the permission from.
+    *
+    * @return The SecurityGroup with the permission removed, after the permission has been removed on the provider.
+    */
+   SecurityGroup removeIpPermission(IpPermission ipPermission, SecurityGroup group);
+
+   /**
     * Add a @{link IpPermission} to an existing @{link SecurityGroup}, based on the parameters given.
     *   Applies the permission to the security group on the provider.
     *
@@ -66,6 +88,8 @@ public interface SecurityGroupExtension {
     *           The first port in the range to be opened, or -1 for ICMP.
     * @param endPort
     *           The last port in the range to be opened, or -1 for ICMP.
+    * @param tenantIdGroupNamePairs
+    *           source of traffic allowed is on basis of another group in a tenant, as opposed to by cidr
     * @param ipRanges
     *           An Iterable of Strings representing the IP range(s) the permission should allow.
     * @param groupIds
@@ -75,7 +99,35 @@ public interface SecurityGroupExtension {
     *
     * @return The SecurityGroup with the new permission added, after the permission has been applied on the provider.
     */
-   SecurityGroup addIpPermission(IpProtocol protocol, int startPort, int endPort, Iterable<String> ipRanges,
+   SecurityGroup addIpPermission(IpProtocol protocol, int startPort, int endPort,
+                                 Multimap<String, String> tenantIdGroupNamePairs,
+                                 Iterable<String> ipRanges,
                                  Iterable<String> groupIds, SecurityGroup group);
+
+   /**
+    * Remove a @{link IpPermission} from an existing @{link SecurityGroup}, based on the parameters given.
+    *   Removes the permission from the security group on the provider.
+    *
+    * @param protocol
+    *           The @{link IpProtocol} for the permission.
+    * @param startPort
+    *           The first port in the range to be opened, or -1 for ICMP.
+    * @param endPort
+    *           The last port in the range to be opened, or -1 for ICMP.
+    * @param tenantIdGroupNamePairs
+    *           source of traffic allowed is on basis of another group in a tenant, as opposed to by cidr
+    * @param ipRanges
+    *           An Iterable of Strings representing the IP range(s) the permission should allow.
+    * @param groupIds
+    *           An Iterable of @{link SecurityGroup} IDs this permission should allow.
+    * @param group
+    *           The SecurityGroup to remove the permission from.
+    *
+    * @return The SecurityGroup with the permission removed, after the permission has been removed from the provider.
+    */
+   SecurityGroup removeIpPermission(IpProtocol protocol, int startPort, int endPort,
+                                    Multimap<String, String> tenantIdGroupNamePairs,
+                                    Iterable<String> ipRanges,
+                                    Iterable<String> groupIds, SecurityGroup group);
    
 }

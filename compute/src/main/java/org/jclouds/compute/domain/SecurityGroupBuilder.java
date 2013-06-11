@@ -40,6 +40,11 @@ public class SecurityGroupBuilder extends ComputeMetadataBuilder {
       super(ComputeType.SECURITYGROUP);
    }
 
+   public SecurityGroupBuilder ipPermissions() {
+      this.ipPermissions = ImmutableSet.<IpPermission> builder();
+      return this;
+   }
+
    public SecurityGroupBuilder ipPermissions(Iterable<IpPermission> ipPermissions) {
       this.ipPermissions.addAll(checkNotNull(ipPermissions, "ipPermissions"));
       return this;
