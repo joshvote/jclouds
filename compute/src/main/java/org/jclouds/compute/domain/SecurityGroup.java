@@ -23,12 +23,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.compute.domain.ComputeType;
-import org.jclouds.compute.domain.SecurityGroup;
-import org.jclouds.compute.domain.SecurityGroupRule;
 import org.jclouds.compute.domain.internal.ComputeMetadataImpl;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.ResourceMetadata;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Predicate;
@@ -42,29 +41,29 @@ import com.google.common.collect.ImmutableSet;
  */
 public class SecurityGroup extends ComputeMetadataImpl {
 
-   private final Set<SecurityGroupRule> rules;
+   private final Set<IpPermission> ipPermissions;
 
    public SecurityGroup(String providerId, String name, String id, @Nullable Location location, URI uri,
                         Map<String, String> userMetadata, Set<String> tags,
-                        Iterable<SecurityGroupRule> rules) { 
+                        Iterable<IpPermission> ipPermissions) { 
       super(ComputeType.SECURITYGROUP, providerId, name, id, location, uri, userMetadata, tags);
-      this.rules = ImmutableSet.copyOf(checkNotNull(rules, "rules"));
+      this.ipPermissions = ImmutableSet.copyOf(checkNotNull(ipPermissions, "ipPermissions"));
    }
 
    /**
     * 
-    * @return The set of @{link SecurityGroupRule}s for this security group
+    * @return The set of @{link IpPermission}s for this security group
     */
-   public Set<SecurityGroupRule> getRules() {
-      return rules;
+   public Set<IpPermission> getIpPermissions() {
+      return ipPermissions;
    }
 
 
    @Override
    protected ToStringHelper string() {
       ToStringHelper helper = computeToStringPrefix();
-      if (rules.size() > 0)
-         helper.add("rules", rules);
+      if (ipPermissions.size() > 0)
+         helper.add("ipPermissions", ipPermissions);
       return addComputeToStringSuffix(helper);
    }
 

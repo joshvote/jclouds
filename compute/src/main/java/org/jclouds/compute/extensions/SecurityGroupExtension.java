@@ -16,10 +16,10 @@
  */
 package org.jclouds.compute.extensions;
 
-import org.jclouds.compute.domain.IpProtocol;
 import org.jclouds.compute.domain.SecurityGroup;
-import org.jclouds.compute.domain.SecurityGroupRule;
 import org.jclouds.domain.Location;
+import org.jclouds.net.domain.IpPermission;
+import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -44,38 +44,38 @@ public interface SecurityGroupExtension {
    SecurityGroup createSecurityGroup(String name, Location location);
 
    /**
-    * Add a @{link SecurityGroupRule} to an existing @{link SecurityGroup}. Applies the rule to the
+    * Add a @{link IpPermission} to an existing @{link SecurityGroup}. Applies the permission to the
     *   security group on the provider.
     *
     * @param rule
-    *           The SecurityGroupRule to add.
+    *           The IpPermission to add.
     * @param group
-    *           The SecurityGroup to add the rule to.
+    *           The SecurityGroup to add the permission to.
     *
-    * @return The SecurityGroup with the new rule added, after the rule has been applied on the provider.
+    * @return The SecurityGroup with the new permission added, after the permission has been applied on the provider.
     */
-   SecurityGroup addRule(SecurityGroupRule rule, SecurityGroup group);
+   SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group);
 
    /**
-    * Add a @{link SecurityGroupRule} to an existing @{link SecurityGroup}, based on the parameters given.
-    *   Applies the rule to the security group on the provider.
+    * Add a @{link IpPermission} to an existing @{link SecurityGroup}, based on the parameters given.
+    *   Applies the permission to the security group on the provider.
     *
     * @param protocol
-    *           The @{link IpProtocol} for the rule.
+    *           The @{link IpProtocol} for the permission.
     * @param startPort
     *           The first port in the range to be opened, or -1 for ICMP.
     * @param endPort
     *           The last port in the range to be opened, or -1 for ICMP.
     * @param ipRanges
-    *           An Iterable of Strings representing the IP range(s) the rule should allow.
+    *           An Iterable of Strings representing the IP range(s) the permission should allow.
     * @param groupIds
-    *           An Iterable of @{link SecurityGroup} IDs this rule should allow.
+    *           An Iterable of @{link SecurityGroup} IDs this permission should allow.
     * @param group
-    *           The SecurityGroup to add the rule to.
+    *           The SecurityGroup to add the permission to.
     *
-    * @return The SecurityGroup with the new rule added, after the rule has been applied on the provider.
+    * @return The SecurityGroup with the new permission added, after the permission has been applied on the provider.
     */
-   SecurityGroup addRule(IpProtocol protocol, int startPort, int endPort, Iterable<String> ipRanges,
-                         Iterable<String> groupIds, SecurityGroup group);
+   SecurityGroup addIpPermission(IpProtocol protocol, int startPort, int endPort, Iterable<String> ipRanges,
+                                 Iterable<String> groupIds, SecurityGroup group);
    
 }
