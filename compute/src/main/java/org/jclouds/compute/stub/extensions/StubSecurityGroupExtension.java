@@ -37,6 +37,7 @@ import org.jclouds.location.suppliers.all.JustProvider;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -71,6 +72,21 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
       this.idProvider = idProvider;
       this.locationSupplier = locationSupplier;
    }
+
+   @Override
+   public Set<SecurityGroup> listSecurityGroups() {
+      return ImmutableSet.copyOf(groups.values());
+   }
+
+   @Override
+   public Set<SecurityGroup> listSecurityGroupsInLocation(final Location location) {
+      return ImmutableSet.copyOf(filter(groups.values(), new Predicate<SecurityGroup>() {
+               @Override
+               public boolean apply(SecurityGroup group) {
+                  return group.getLocation().equals(location);
+               }
+            }));
+   }
    
    @Override
    public SecurityGroup createSecurityGroup(String name, Location location) {
@@ -89,10 +105,12 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
    }
 
    @Override
-   public void removeSecurityGroup(String id) {
+   public boolean removeSecurityGroup(String id) {
       if (groups.containsKey(id)) {
          groups.remove(id);
+         return true;
       }
+      return false;
    }
 
    @Override

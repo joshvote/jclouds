@@ -16,6 +16,8 @@
  */
 package org.jclouds.compute.extensions;
 
+import java.util.Set;
+
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.domain.Location;
 import org.jclouds.net.domain.IpPermission;
@@ -33,6 +35,20 @@ import com.google.common.util.concurrent.ListenableFuture;
 public interface SecurityGroupExtension {
 
    /**
+    * List security groups.
+    *
+    * @return The set of @{link SecurityGroup}s we have access to.
+    */
+   Set<SecurityGroup> listSecurityGroups();
+
+   /**
+    * List security groups in a given @{link Location}.
+    *
+    * @return The set of @{link SecurityGroup}s we have access to in the given location.
+    */
+   Set<SecurityGroup> listSecurityGroupsInLocation(Location location);
+   
+   /**
     * Create a new @{link SecurityGroup} from the parameters given.
     *
     * @param name
@@ -49,8 +65,10 @@ public interface SecurityGroupExtension {
     *
     * @param id
     *           The id of the SecurityGroup to delete.
+    *
+    * @return true if we were able to remove the group, false otherwise.
     */
-   void removeSecurityGroup(String id);
+   boolean removeSecurityGroup(String id);
 
    /**
     * Add a @{link IpPermission} to an existing @{link SecurityGroup}. Applies the permission to the
