@@ -21,6 +21,7 @@ import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Resource;
@@ -48,13 +49,22 @@ import com.google.common.collect.Iterables;
 /**
  * Base test for {@link SecurityGroupExtension} implementations.
  * 
- * @author David Alves
+ * @author Andrew Bayer
  * 
  */
-@Test(groups = { "integration", "live" }, testName="StubSecurityGroupExtensionIntegrationTest")
+@Test(groups = { "integration", "live" }, singleThreaded = true, testName="StubSecurityGroupExtensionIntegrationTest")
 public class StubSecurityGroupExtensionIntegrationTest extends BaseSecurityGroupExtensionLiveTest {
 
    public StubSecurityGroupExtensionIntegrationTest() {
       provider = "stub";
+   }
+
+   @Override
+   protected Properties setupProperties() {
+      Properties overrides = super.setupProperties();
+      // This is a hack to make sure we get a different set of node IDs, nodes, groups, etc from StubComputeServiceIntegrationTest.
+      overrides.setProperty(provider + ".identity", "sec-stub");
+
+      return overrides;
    }
 }

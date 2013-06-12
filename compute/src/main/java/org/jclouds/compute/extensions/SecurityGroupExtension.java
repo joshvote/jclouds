@@ -48,6 +48,14 @@ public interface SecurityGroupExtension {
     */
    Set<SecurityGroup> listSecurityGroupsInLocation(Location location);
    
+
+   /**
+    * List security groups for a given instance given the instance's ID.
+    *
+    * @return The set of @{link SecurityGroup}s for the given instance..
+    */
+   Set<SecurityGroup> listSecurityGroupsForNode(String id);
+   
    /**
     * Create a new @{link SecurityGroup} from the parameters given.
     *

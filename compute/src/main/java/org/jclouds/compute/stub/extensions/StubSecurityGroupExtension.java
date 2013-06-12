@@ -55,22 +55,25 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 public class StubSecurityGroupExtension implements SecurityGroupExtension {
 
    private final Supplier<Location> location;
-   private final Provider<Integer> idProvider;
+   private final Provider<Integer> groupIdProvider;
    private final Supplier<Set<? extends Location>> locationSupplier;
    private final ListeningExecutorService ioExecutor;
    private final ConcurrentMap<String, SecurityGroup> groups;
+   private final Multimap<String, SecurityGroup> groupsForNodes;
 
    @Inject
    public StubSecurityGroupExtension(ConcurrentMap<String, SecurityGroup> groups,
                                      @Named(Constants.PROPERTY_IO_WORKER_THREADS) ListeningExecutorService ioExecutor,
                                      Supplier<Location> location,
-                                     @Named("GROUP_ID") Provider<Integer> idProvider, 
-                                     JustProvider locationSupplier) {
+                                     @Named("GROUP_ID") Provider<Integer> groupIdProvider, 
+                                     JustProvider locationSupplier,
+                                     Multimap<String, SecurityGroup> groupsForNodes) {
       this.groups = groups;
       this.ioExecutor = ioExecutor;
       this.location = location;
-      this.idProvider = idProvider;
+      this.groupIdProvider = groupIdProvider;
       this.locationSupplier = locationSupplier;
+      this.groupsForNodes = groupsForNodes;
    }
 
    @Override
@@ -87,12 +90,17 @@ public class StubSecurityGroupExtension implements SecurityGroupExtension {
                }
             }));
    }
+
+   @Override
+   public Set<SecurityGroup> listSecurityGroupsForNode(String nodeId) {
+      return ImmutableSet.copyOf(groupsForNodes.get(nodeId));
+   }
    
    @Override
    public SecurityGroup createSecurityGroup(String name, Location location) {
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
 
-      String id = idProvider.get() + "";
+      String id = groupIdProvider.get() + "";
       builder.ids(id);
       builder.name(name);
       builder.location(location);

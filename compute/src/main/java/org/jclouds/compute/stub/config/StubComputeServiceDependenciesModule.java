@@ -43,6 +43,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.net.HostAndPort;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -94,6 +96,23 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
    protected ConcurrentMap<String, SecurityGroup> provideGroups(@Provider Supplier<Credentials> creds)
             throws ExecutionException {
       return groupBacking.get(creds.get().identity);
+   }
+
+   protected static final LoadingCache<String, Multimap<String, SecurityGroup>> groupsForNodeBacking = CacheBuilder.newBuilder()
+            .build(new CacheLoader<String, Multimap<String, SecurityGroup>>() {
+
+               @Override
+               public Multimap<String, SecurityGroup> load(String arg0) throws Exception {
+                  return LinkedHashMultimap.create();
+               }
+
+            });
+
+   @Provides
+   @Singleton
+   protected Multimap<String, SecurityGroup> provideGroupsForNode(@Provider Supplier<Credentials> creds)
+            throws ExecutionException {
+      return groupsForNodeBacking.get(creds.get().identity);
    }
 
    protected static final LoadingCache<String, AtomicInteger> nodeIds = CacheBuilder.newBuilder().build(
