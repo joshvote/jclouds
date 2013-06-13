@@ -154,7 +154,7 @@ public class IpPermission implements Comparable<IpPermission> {
    private final IpProtocol ipProtocol;
    private final Set<String> cidrBlocks;
 
-   protected IpPermission(IpProtocol ipProtocol, int fromPort, int toPort,
+   public IpPermission(IpProtocol ipProtocol, int fromPort, int toPort,
             Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> groupIds, Iterable<String> cidrBlocks) {
       this.fromPort = fromPort;
       this.toPort = toPort;
