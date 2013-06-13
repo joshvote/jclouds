@@ -38,12 +38,14 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.compute.domain.SecurityGroupRule;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.functions.IdentityFunction;
+import org.jclouds.net.domain.IpPermission;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeService;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaImageExtension;
@@ -52,6 +54,7 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.FlavorInZoneToHardware;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageInZoneToImage;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageToOperatingSystem;
 import org.jclouds.openstack.nova.v2_0.compute.functions.OrphanedGroupsByZoneId;
+import org.jclouds.openstack.nova.v2_0.compute.functions.SecurityGroupRuleToIpPermisison;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ServerInZoneToNodeMetadata;
 import org.jclouds.openstack.nova.v2_0.compute.loaders.CreateUniqueKeyPair;
 import org.jclouds.openstack.nova.v2_0.compute.loaders.FindSecurityGroupOrCreate;
@@ -107,6 +110,9 @@ public class NovaComputeServiceContextModule extends
       
       bind(new TypeLiteral<Function<ServerInZone, NodeMetadata>>() {
       }).to(ServerInZoneToNodeMetadata.class);
+
+      bind(new TypeLiteral<Function<SecurityGroupRule, IpPermission>>() {
+      }).to(SecurityGroupRuleToIpPermission.class);
 
       bind(new TypeLiteral<Function<Set<? extends NodeMetadata>,  Multimap<String, String>>>() {
       }).to(OrphanedGroupsByZoneId.class);
