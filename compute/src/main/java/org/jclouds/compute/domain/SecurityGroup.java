@@ -35,7 +35,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Describes a security group containing a set of @{link SecurityGroupRule}s
+ * Describes a security group containing a set of @{link IpPermission}s
  * 
  * @author Andrew Bayer
  */
