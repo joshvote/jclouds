@@ -80,7 +80,6 @@ public class SecurityGroupRuleToIpPermissionTest {
       assertEquals(convertedPerm.getIpProtocol(), ruleToConvert.getIpProtocol());
       assertEquals(convertedPerm.getFromPort(), ruleToConvert.getFromPort());
       assertEquals(convertedPerm.getToPort(), ruleToConvert.getToPort());
-      assertEquals(convertedPerm.getToPort(), ruleToConvert.getToPort());
       assertEquals(convertedPerm.getCidrBlocks(), ImmutableSet.of("0.0.0.0/0"));
       assertTrue(convertedPerm.getTenantIdGroupNamePairs().size() == 0);
    }
